@@ -1,8 +1,8 @@
 //
 //  DYFStoreReceiptVerifier.swift
 //
-//  Created by dyf on 2016/11/28.
-//  Copyright © 2016 dyf.
+//  Created by dyf on 2016/11/28. ( https://github.com/dgynfi/DYFStore )
+//  Copyright © 2016 dyf. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@
 //
 
 import Foundation
-import UIKit
 
 /// The class is used to verify in-app purchase receipts.
 open class DYFStoreReceiptVerifier: NSObject {
@@ -87,7 +86,8 @@ open class DYFStoreReceiptVerifier: NSObject {
         verifyReceipt(receiptData, sharedSecret: nil)
     }
     
-    /// Verifies the in-app purchase receipt, but it is not recommended to use. It is better to use your own server with the parameters that was uploaded from the client to verify the receipt from the apple itunes store server (C -> Uploaded Parameters -> S -> Apple iTunes Store S -> S -> Receive Data -> C).
+    /// Verifies the in-app purchase receipt, but it is not recommended to use. It is better to use your own server to obtain the parameters uploaded from the client to verify the receipt from the App Store server (C -> Uploaded Parameters -> S -> App Store S -> S -> Receive And Parse Data -> C).
+    /// If the receipts are verified by your own server, the client needs to upload these parameters, such as: "transaction identifier, bundle identifier, product identifier, user identifier, shared sceret(Subscription), receipt(Safe URL Base64), original transaction identifier(Optional), original transaction time(Optional) and the device information, etc.".
     ///
     /// - Parameters:
     ///   - receiptData: A signed receipt that records all information about a successful payment transaction.
