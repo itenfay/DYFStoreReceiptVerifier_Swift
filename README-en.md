@@ -8,6 +8,15 @@ If this project can help you, please give it [a star](https://github.com/dgynfi/
 
 An open source receipt verification client program. It is recommended that use your own server to obtain the parameters uploaded from the client to verify the receipt from the App Store server (C -> Uploaded Parameters -> S -> App Store S -> S -> Receive And Parse Data -> C, C: client, S: server).
 
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](LICENSE)&nbsp;
+
+
+## Group (ID:614799921)
+
+<div align=left>
+&emsp; <img src="https://github.com/dgynfi/DYFStoreReceiptVerifier_Swift/raw/master/images/g614799921.jpg" width="30%" />
+</div>
+
 
 ## Usage
 

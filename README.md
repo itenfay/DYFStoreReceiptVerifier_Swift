@@ -8,6 +8,15 @@
 
 一个开源的收据验证客户端程序。建议你使用自己的服务器获取从客户端上传的参数，以验证来自App Store服务器的收据的响应信息（C -> 上传的参数 -> S -> App Store S -> S -> 接收并解析数据 -> C，C:客户端，S:服务器）。
 
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](LICENSE)&nbsp;
+
+
+## QQ群 (ID:614799921)
+
+<div align=left>
+&emsp; <img src="https://github.com/dgynfi/DYFStoreReceiptVerifier_Swift/raw/master/images/g614799921.jpg" width="30%" />
+</div>
+
 
 ## 使用
 
