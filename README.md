@@ -1,6 +1,8 @@
 ## DYFStoreReceiptVerifier_Swift
 
-An open source receipt verification client program. It is recommended that use your own server to obtain the parameters uploaded from the client to verify the receipt from the App Store server (C -> Uploaded Parameters -> S -> App Store S -> S -> Receive And Parse Data -> C, C: client, S: server).
+An open source receipt verification program for iOS. 
+
+It is recommended that use your own server to obtain the parameters uploaded from the client to verify the receipt from the App Store server (C -> Uploaded Parameters -> S -> App Store S -> S -> Receive And Parse Data -> C, C: client, S: server).
 
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](LICENSE)&nbsp;
 

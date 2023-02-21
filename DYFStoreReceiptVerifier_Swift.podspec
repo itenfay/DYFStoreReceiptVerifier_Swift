@@ -3,10 +3,10 @@ Pod::Spec.new do |spec|
 
   spec.name         = "DYFStoreReceiptVerifier_Swift"
   spec.version      = "1.1.0"
-  spec.summary      = "An open source receipt verification client program. (Swift)"
+  spec.summary      = "An open source receipt verification program for iOS. (Swift)"
 
   spec.description  = <<-DESC
-	    An open source receipt verification client program. (Swift)
+	    An open source receipt verification program for iOS. (Swift)
                    DESC
 
   spec.homepage      = "https://github.com/chenxing640/DYFStoreReceiptVerifier_Swift"
