@@ -42,7 +42,7 @@ Pod::Spec.new do |spec|
   # spec.library   = "iconv"
   # spec.libraries = "iconv", "xml2"
 
-  s.swift_versions = ['4.2', '5.0']
+  spec.swift_versions = ['4.2', '5.0']
 
   # spec.requires_arc  = true 
 
