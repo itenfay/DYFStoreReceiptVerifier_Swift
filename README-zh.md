@@ -8,8 +8,22 @@
 ## QQ群 (ID:614799921)
 
 <div align=left>
-&emsp; <img src="https://github.com/dgynfi/DYFStoreReceiptVerifier_Swift/raw/master/images/g614799921.jpg" width="30%" />
+&emsp; <img src="https://github.com/chenxing640/DYFStoreReceiptVerifier_Swift/raw/master/images/g614799921.jpg" width="30%" />
 </div>
+
+
+## 安装
+
+Using [CocoaPods](https://cocoapods.org):
+
+```
+use_frameworks!
+target 'Your target name'
+
+pod 'DYFStoreReceiptVerifier_Swift'
+Or
+pod 'DYFStoreReceiptVerifier_Swift', '~> 1.1.0'
+```
 
 
 ## 使用
@@ -55,13 +69,27 @@ public func verifyReceipt(_ verifier: DYFStoreReceiptVerifier, didFailWithError 
 
 - 验证收据
 
+- 步骤1:
+
+获取应用商店收据的数据。 
+
 ```
-// Fetches the data of the bundle’s App Store receipt. 
+// receiptData: the data of the bundle’s App Store receipt. 
+let receiptData = DYFStore.receiptURL()
 let data = receiptData
+```
 
+- 步骤2:
+
+验证应用内购买收据。
+
+```
 self.receiptVerifier.verifyReceipt(data)
+```
 
-// Only used for receipts that contain auto-renewable subscriptions.
+验证用于包含自动续订套餐的收据，需要应用的共享密钥(十六进制字符串)。
+
+```
 //self.receiptVerifier.verifyReceipt(data, sharedSecret: "A43512564ACBEF687924646CAFEFBDCAEDF4155125657")
 ```
 
@@ -74,7 +102,6 @@ self.receiptVerifier.verifyReceipt(data)
 /// - Returns: A tuple that contains status code and the description of status code.
 public func matchMessage(withStatus status: Int) -> (Int, String) {
     var message: String = ""
-    
     switch status {
     case 0:
         message = "The receipt as a whole is valid."
@@ -110,7 +137,6 @@ public func matchMessage(withStatus status: Int) -> (Int, String) {
         message = "Internal data access error."
         break
     }
-    
     return (status, message)
 }
 
@@ -132,9 +158,9 @@ public func matchMessage(withStatus status: Int) -> (Int, String) {
 
 ## 演示
 
-如需了解更多，请查看[Demo](https://github.com/dgynfi/DYFStore/blob/master/DYFStoreDemo/DYFStoreManager.swift)。
+如需了解更多，请查看[Demo](https://github.com/chenxing640/DYFStore/blob/master/DYFStoreDemo/DYFStoreManager.swift)。
 
 
 ## 欢迎反馈
 
-如果你注意到任何问题，被卡住或只是想聊天，请随意创建一个问题。我很乐意帮助你。
+如果你注意到任何问题被卡住，请创建一个问题。我很乐意帮助你。

@@ -10,8 +10,22 @@ An open source receipt verification client program. It is recommended that use y
 ## Group (ID:614799921)
 
 <div align=left>
-&emsp; <img src="https://github.com/dgynfi/DYFStoreReceiptVerifier_Swift/raw/master/images/g614799921.jpg" width="30%" />
+&emsp; <img src="https://github.com/chenxing640/DYFStoreReceiptVerifier_Swift/raw/master/images/g614799921.jpg" width="30%" />
 </div>
+
+
+## Installation
+
+Using [CocoaPods](https://cocoapods.org):
+
+```
+use_frameworks!
+target 'Your target name'
+
+pod 'DYFStoreReceiptVerifier_Swift'
+Or
+pod 'DYFStoreReceiptVerifier_Swift', '~> 1.1.0'
+```
 
 
 ## Usage
@@ -57,14 +71,28 @@ public func verifyReceipt(_ verifier: DYFStoreReceiptVerifier, didFailWithError 
 
 - Verify the receipt
 
+- Step1:
+
+Fetches the data of the bundle’s App Store receipt. 
+
 ```
-// Fetches the data of the bundle’s App Store receipt. 
+// receiptData: the data of the bundle’s App Store receipt. 
+let receiptData = DYFStore.receiptURL()
 let data = receiptData
+```
 
+- Step2:
+
+Verifies the in-app purchase receipt.
+
+```
 self.receiptVerifier.verifyReceipt(data)
+```
 
-// Only used for receipts that contain auto-renewable subscriptions.
-//self.receiptVerifier.verifyReceipt(data, sharedSecret: "A43512564ACBEF687924646CAFEFBDCAEDF4155125657")
+Your app’s shared secret (a hexadecimal string). Only used for receipts that contain auto-renewable subscriptions.
+
+```
+self.receiptVerifier.verifyReceipt(data, sharedSecret: "A43512564ACBEF687924646CAFEFBDCAEDF4155125657")
 ```
 
 - The status code and description
@@ -76,7 +104,6 @@ self.receiptVerifier.verifyReceipt(data)
 /// - Returns: A tuple that contains status code and the description of status code.
 public func matchMessage(withStatus status: Int) -> (Int, String) {
     var message: String = ""
-    
     switch status {
     case 0:
         message = "The receipt as a whole is valid."
@@ -112,7 +139,6 @@ public func matchMessage(withStatus status: Int) -> (Int, String) {
         message = "Internal data access error."
         break
     }
-    
     return (status, message)
 }
 
@@ -134,9 +160,9 @@ public func matchMessage(withStatus status: Int) -> (Int, String) {
 
 ## Demo
 
-To learn more, please check out [Demo](https://github.com/dgynfi/DYFStore/blob/master/DYFStoreDemo/DYFStoreManager.swift).
+To learn more, please check out [Demo](https://github.com/chenxing640/DYFStore/blob/master/DYFStoreDemo/DYFStoreManager.swift).
 
 
 ## Feedback is welcome
 
-If you notice any issue, got stuck or just want to chat feel free to create an issue. I will be happy to help you.
+If you notice any issue, got stuck to create an issue. I will be happy to help you.

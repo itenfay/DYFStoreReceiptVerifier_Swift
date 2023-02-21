@@ -1,8 +1,8 @@
 //
 //  DYFStoreReceiptVerifier.swift
 //
-//  Created by dyf on 2016/11/28. ( https://github.com/dgynfi/DYFStore )
-//  Copyright © 2016 dyf. All rights reserved.
+//  Created by chenxing on 2016/11/28. ( https://github.com/chenxing640/DYFStoreReceiptVerifier_Swift )
+//  Copyright © 2016 chenxing. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,7 @@ open class DYFStoreReceiptVerifier: NSObject {
     /// Whether all outstanding tasks have been cancelled and the session has been invalidated.
     private var canInvalidateSession: Bool = false
     
-    /// Instantiates a DYFStoreReceiptVerifier object.
+    /// Instantiates an `DYFStoreReceiptVerifier` object.
     public override init() {
         super.init()
         self.instantiateUrlSession()
@@ -79,30 +79,28 @@ open class DYFStoreReceiptVerifier: NSObject {
         self.canInvalidateSession = true
     }
     
-    /// Verifies the in-app purchase receipt, but it is not recommended to use. It is better to use your own server with the parameters that was uploaded from the client to verify the receipt from the apple itunes store server (C -> Uploaded Parameters -> S -> Apple iTunes Store S -> S -> Receive Data -> C).
+    /// Verifies the in-app purchase receipt, but it is not recommended to use. It is better to use your own server to obtain the parameters uploaded from the client to verify the receipt from the app store server (C -> Uploaded Parameters -> S -> App Store S -> S -> Receive And Parse Data -> C).
+    /// If the receipts are verified by your own server, the client needs to upload these parameters, such as: "transaction identifier, bundle identifier, product identifier, user identifier, shared sceret(Subscription), receipt(Safe URL Base64), original transaction identifier(Optional), original transaction time(Optional) and the device information, etc.".
     ///
     /// - Parameter receiptData: A signed receipt that records all information about a successful payment transaction.
     @objc public func verifyReceipt(_ receiptData: Data?) {
         verifyReceipt(receiptData, sharedSecret: nil)
     }
     
-    /// Verifies the in-app purchase receipt, but it is not recommended to use. It is better to use your own server to obtain the parameters uploaded from the client to verify the receipt from the App Store server (C -> Uploaded Parameters -> S -> App Store S -> S -> Receive And Parse Data -> C).
+    /// Verifies the in-app purchase receipt, but it is not recommended to use. It is better to use your own server to obtain the parameters uploaded from the client to verify the receipt from the app store server (C -> Uploaded Parameters -> S -> App Store S -> S -> Receive And Parse Data -> C).
     /// If the receipts are verified by your own server, the client needs to upload these parameters, such as: "transaction identifier, bundle identifier, product identifier, user identifier, shared sceret(Subscription), receipt(Safe URL Base64), original transaction identifier(Optional), original transaction time(Optional) and the device information, etc.".
     ///
     /// - Parameters:
     ///   - receiptData: A signed receipt that records all information about a successful payment transaction.
     ///   - secretKey: Your app’s shared secret (a hexadecimal string). Only used for receipts that contain auto-renewable subscriptions.
     @objc public func verifyReceipt(_ receiptData: Data?, sharedSecret secretKey: String? = nil) {
-        
         guard let data = receiptData else {
-            
             let messae = "The received data is null."
-            let error  = NSError(domain: "SRErrorDomain.DYFStore",
+            let error  = NSError(domain: "SKErrorDomain.verifyReceipt",
                                  code: -12,
                                  userInfo: [NSLocalizedDescriptionKey : messae])
             
             self.delegate?.verifyReceipt(self, didFailWithError: error)
-            
             return
         }
         
@@ -117,7 +115,6 @@ open class DYFStoreReceiptVerifier: NSObject {
         
         do {
             self.requestData = try JSONSerialization.data(withJSONObject: requestContents)
-            
             self.connect(withUrl: productUrl)
         } catch let error {
             self.delegate?.verifyReceipt(self, didFailWithError: error as NSError)
@@ -138,18 +135,15 @@ open class DYFStoreReceiptVerifier: NSObject {
             self.canInvalidateSession = false
         }
         
-        self.dataTask = self.urlSession?.dataTask(with: request) { (data, response, error) in
-            self.didReceiveData(data, response: response, error: error)
+        self.dataTask = self.urlSession?.dataTask(with: request) { [weak self] (data, response, error) in
+            self?.didReceiveData(data, response: response, error: error)
         }
         self.dataTask?.resume()
     }
     
     private func didReceiveData(_ data: Data?, response: URLResponse?, error: Error?) {
-        
         if let err = error {
-            
             let nsError = err as NSError
-            
             DispatchQueue.main.async {
                 self.delegate?.verifyReceipt(self, didFailWithError: nsError)
             }
@@ -165,17 +159,14 @@ open class DYFStoreReceiptVerifier: NSObject {
             
             let status = dict["status"] as! Int
             if status == 0 {
-                
                 DispatchQueue.main.async {
                     self.delegate?.verifyReceiptDidFinish(self, didReceiveData: dict)
                 }
             } else if status == 21007 { // sandbox
-                
                 self.connect(withUrl: sandboxUrl)
             } else {
-                
                 let (code, message) = matchMessage(withStatus: status)
-                let nsError = NSError(domain: "SRErrorDomain.DYFStore",
+                let nsError = NSError(domain: "SKErrorDomain.verifyReceipt",
                                       code: code,
                                       userInfo: [NSLocalizedDescriptionKey : message])
                 
@@ -183,11 +174,8 @@ open class DYFStoreReceiptVerifier: NSObject {
                     self.delegate?.verifyReceipt(self, didFailWithError: nsError)
                 }
             }
-            
         } catch let error {
-            
             let nsError = error as NSError
-            
             DispatchQueue.main.async {
                 self.delegate?.verifyReceipt(self, didFailWithError: nsError)
             }
@@ -200,7 +188,6 @@ open class DYFStoreReceiptVerifier: NSObject {
     /// - Returns: A tuple that contains status code and the description of status code.
     public func matchMessage(withStatus status: Int) -> (Int, String) {
         var message: String = ""
-        
         switch status {
         case 0:
             message = "The receipt as a whole is valid."
@@ -236,7 +223,6 @@ open class DYFStoreReceiptVerifier: NSObject {
             message = "Internal data access error."
             break
         }
-        
         return (status, message)
     }
     
