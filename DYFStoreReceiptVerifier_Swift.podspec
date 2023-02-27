@@ -2,7 +2,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "DYFStoreReceiptVerifier_Swift"
-  spec.version      = "1.1.0"
+  spec.version      = "1.1.2"
   spec.summary      = "An open source receipt verification program for iOS. (Swift)"
 
   spec.description  = <<-DESC
@@ -28,7 +28,7 @@ Pod::Spec.new do |spec|
 
   spec.source = { :git => "https://github.com/chenxing640/DYFStoreReceiptVerifier_Swift.git", :tag => spec.version.to_s }
 
-  spec.source_files    = "ReceiptVerification/*.swift"
+  spec.source_files    = "Classes/*.swift"
   # spec.exclude_files = "Classes/Exclude"
   # spec.public_header_files = "Classes/**/*.h"
 
@@ -43,8 +43,7 @@ Pod::Spec.new do |spec|
   # spec.libraries = "iconv", "xml2"
 
   spec.swift_versions = ['4.2', '5.0']
-
-  # spec.requires_arc  = true 
+  spec.requires_arc = true
 
   # spec.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   # spec.dependency "JSONKit", "~> 1.4"
