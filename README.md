@@ -1,14 +1,14 @@
+English Vision | [中文版](README-zh.md)
+
 ## DYFStoreReceiptVerifier_Swift
 
-An open source receipt verification program for iOS. 
+An open source receipt verification program for iOS([Objective-C Version](https://github.com/chenxing640/DYFStoreReceiptVerifier)). 
 
 It is recommended that use your own server to obtain the parameters uploaded from the client to verify the receipt from the App Store server (C -> Uploaded Parameters -> S -> App Store S -> S -> Receive And Parse Data -> C, C: client, S: server).
 
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](LICENSE)&nbsp;
 [![CocoaPods Version](http://img.shields.io/cocoapods/v/DYFStoreReceiptVerifier_Swift.svg?style=flat)](http://cocoapods.org/pods/DYFStoreReceiptVerifier_Swift)&nbsp;
 ![CocoaPods Platform](http://img.shields.io/cocoapods/p/DYFStoreReceiptVerifier_Swift.svg?style=flat)&nbsp;
-
-[Chinese Instructions (中文说明)](README-zh.md)
 
 
 ## Group (ID:614799921)
@@ -36,7 +36,7 @@ pod 'DYFStoreReceiptVerifier_Swift', '~> 1.1.2'
 
 - URL for verification
 
-1. Sandbox URL: `https://sandbox.itunes.apple.com/verifyReceipt` <br />
+1. Sandbox URL: `https://sandbox.itunes.apple.com/verifyReceipt` <br>
 2. Production URL: `https://buy.itunes.apple.com/verifyReceipt`
 
 - Reference verifier
