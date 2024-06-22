@@ -1,8 +1,8 @@
 //
 //  DYFStoreReceiptVerifier.swift
 //
-//  Created by chenxing on 2016/11/28. ( https://github.com/chenxing640/DYFStoreReceiptVerifier_Swift )
-//  Copyright © 2016 chenxing. All rights reserved.
+//  Created by Tenfay on 2016/11/28. (https://github.com/itenfay/DYFStoreReceiptVerifier_Swift)
+//  Copyright © 2016 Tenfay. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +26,10 @@
 import Foundation
 
 /// The class is used to verify in-app purchase receipts.
-open class DYFStoreReceiptVerifier: NSObject {
+open class DYFStoreReceiptVerifier {
     
     /// Callbacks the result of the request that verifies the in-app purchase receipt.
-    @objc public weak var delegate: DYFStoreReceiptVerifierDelegate?
+    public weak var delegate: DYFStoreReceiptVerifierDelegate?
     
     /// The url for sandbox in the test environment.
     private let sandboxUrl = "https://sandbox.itunes.apple.com/verifyReceipt"
@@ -69,12 +69,12 @@ open class DYFStoreReceiptVerifier: NSObject {
     }
     
     /// Cancels the task.
-    @objc public func cancel() {
+    public func cancel() {
         self.dataTask?.cancel()
     }
     
     /// Cancels all outstanding tasks and then invalidates the session.
-    @objc public func invalidateAndCancel() {
+    public func invalidateAndCancel() {
         self.urlSession?.invalidateAndCancel()
         self.canInvalidateSession = true
     }
@@ -83,7 +83,7 @@ open class DYFStoreReceiptVerifier: NSObject {
     /// If the receipts are verified by your own server, the client needs to upload these parameters, such as: "transaction identifier, bundle identifier, product identifier, user identifier, shared sceret(Subscription), receipt(Safe URL Base64), original transaction identifier(Optional), original transaction time(Optional) and the device information, etc.".
     ///
     /// - Parameter receiptData: A signed receipt that records all information about a successful payment transaction.
-    @objc public func verifyReceipt(_ receiptData: Data?) {
+    public func verifyReceipt(_ receiptData: Data?) {
         verifyReceipt(receiptData, sharedSecret: nil)
     }
     
@@ -93,7 +93,7 @@ open class DYFStoreReceiptVerifier: NSObject {
     /// - Parameters:
     ///   - receiptData: A signed receipt that records all information about a successful payment transaction.
     ///   - secretKey: Your app’s shared secret (a hexadecimal string). Only used for receipts that contain auto-renewable subscriptions.
-    @objc public func verifyReceipt(_ receiptData: Data?, sharedSecret secretKey: String? = nil) {
+    public func verifyReceipt(_ receiptData: Data?, sharedSecret secretKey: String? = nil) {
         guard let data = receiptData else {
             let messae = "The received data is null."
             let error  = NSError(domain: "SKErrorDomain.verifyReceipt",
@@ -230,7 +230,7 @@ open class DYFStoreReceiptVerifier: NSObject {
     ///
     /// - Parameter status: The status code of the request response. More, please see [Receipt Validation Programming Guide](https://developer.apple.com/library/archive/releasenotes/General/ValidateAppStoreReceipt/Chapters/ValidateRemotely.html#//apple_ref/doc/uid/TP40010573-CH104-SW1)
     /// - Returns: A string that contains the description of status code.
-    @objc public func matchMessage(withStatus status: Int) -> String {
+    public func matchMessage(withStatus status: Int) -> String {
         let (_, msg) = matchMessage(withStatus: status)
         return msg
     }
@@ -238,20 +238,20 @@ open class DYFStoreReceiptVerifier: NSObject {
 }
 
 /// The delegate is used to callback the result of verifying the in-app purchase receipt.
-@objc public protocol DYFStoreReceiptVerifierDelegate: NSObjectProtocol {
+public protocol DYFStoreReceiptVerifierDelegate: AnyObject {
     
     /// Tells the delegate that an in-app purchase receipt verification has completed.
     ///
     /// - Parameters:
     ///   - verifier: A `DYFStoreReceiptVerifier` object.
     ///   - data: The data received from the server, is converted to a dictionary of key-value pairs.
-    @objc func verifyReceiptDidFinish(_ verifier: DYFStoreReceiptVerifier, didReceiveData data: [String : Any])
+    func verifyReceiptDidFinish(_ verifier: DYFStoreReceiptVerifier, didReceiveData data: [String : Any])
     
     /// Tells the delegate that an in-app purchase receipt verification occurs an error.
     ///
     /// - Parameters:
     ///   - verifier: A `DYFStoreReceiptVerifier` object.
     ///   - error: The error that caused the receipt validation to fail.
-    @objc func verifyReceipt(_ verifier: DYFStoreReceiptVerifier, didFailWithError error: NSError)
+    func verifyReceipt(_ verifier: DYFStoreReceiptVerifier, didFailWithError error: NSError)
     
 }
