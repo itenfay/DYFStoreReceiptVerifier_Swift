@@ -52,9 +52,8 @@ open class DYFStoreReceiptVerifier {
     private var canInvalidateSession: Bool = false
     
     /// Instantiates an `DYFStoreReceiptVerifier` object.
-    public override init() {
+    public init() {
         self.instantiateUrlSession()
-        super.init()
     }
     
     /// Checks the url session configuration object.
