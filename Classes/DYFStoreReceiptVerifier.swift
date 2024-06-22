@@ -53,8 +53,8 @@ open class DYFStoreReceiptVerifier {
     
     /// Instantiates an `DYFStoreReceiptVerifier` object.
     public override init() {
-        super.init()
         self.instantiateUrlSession()
+        super.init()
     }
     
     /// Checks the url session configuration object.
