@@ -39,8 +39,8 @@ open class DYFStoreReceiptVerifier {
     /// The data for a POST request.
     private var requestData: Data?
     
-    /// A default session configuration object.
-    private var urlSessionConfig = URLSessionConfiguration.default
+    /// A configuration object that defines behavior and policies for a URL session.
+    private var urlSessionConfig: URLSessionConfiguration?
     
     /// An object that coordinates a group of related network data transfer tasks.
     private var urlSession: URLSession?
@@ -49,22 +49,20 @@ open class DYFStoreReceiptVerifier {
     private var dataTask: URLSessionDataTask?
     
     /// Whether all outstanding tasks have been cancelled and the session has been invalidated.
-    private var canInvalidateSession: Bool = false
+    private var isSessionInvalid: Bool = false
     
     /// Instantiates an `DYFStoreReceiptVerifier` object.
     public init() {
-        self.instantiateUrlSession()
+        self.setup()
     }
     
-    /// Checks the url session configuration object.
-    private func checkUrlSessionConfig() {
-        self.urlSessionConfig.allowsCellularAccess = true
-    }
-    
-    /// Instantiates the url session object.
-    private func instantiateUrlSession() {
-        self.checkUrlSessionConfig()
-        self.urlSession = URLSession(configuration: urlSessionConfig)
+    private func setup() {
+        self.urlSessionConfig = URLSessionConfiguration.default
+        self.urlSessionConfig!.allowsCellularAccess = true
+        self.urlSessionConfig!.timeoutIntervalForRequest = 15.0
+        self.urlSessionConfig!.requestCachePolicy = .reloadIgnoringCacheData
+        self.urlSession = URLSession(configuration: urlSessionConfig!)
+        self.isSessionInvalid = false
     }
     
     /// Cancels the task.
@@ -75,27 +73,27 @@ open class DYFStoreReceiptVerifier {
     /// Cancels all outstanding tasks and then invalidates the session.
     public func invalidateAndCancel() {
         self.urlSession?.invalidateAndCancel()
-        self.canInvalidateSession = true
+        self.isSessionInvalid = true
     }
     
     /// Verifies the in-app purchase receipt, but it is not recommended to use. It is better to use your own server to obtain the parameters uploaded from the client to verify the receipt from the app store server (C -> Uploaded Parameters -> S -> App Store S -> S -> Receive And Parse Data -> C).
     /// If the receipts are verified by your own server, the client needs to upload these parameters, such as: "transaction identifier, bundle identifier, product identifier, user identifier, shared sceret(Subscription), receipt(Safe URL Base64), original transaction identifier(Optional), original transaction time(Optional) and the device information, etc.".
     ///
-    /// - Parameter receiptData: A signed receipt that records all information about a successful payment transaction.
-    public func verifyReceipt(_ receiptData: Data?) {
-        verifyReceipt(receiptData, sharedSecret: nil)
+    /// - Parameter base64Receipt: A signed receipt that records all information about a successful payment transaction.
+    public func verifyReceipt(_ base64Receipt: String?) {
+        verifyReceipt(base64Receipt, sharedSecret: nil)
     }
     
     /// Verifies the in-app purchase receipt, but it is not recommended to use. It is better to use your own server to obtain the parameters uploaded from the client to verify the receipt from the app store server (C -> Uploaded Parameters -> S -> App Store S -> S -> Receive And Parse Data -> C).
     /// If the receipts are verified by your own server, the client needs to upload these parameters, such as: "transaction identifier, bundle identifier, product identifier, user identifier, shared sceret(Subscription), receipt(Safe URL Base64), original transaction identifier(Optional), original transaction time(Optional) and the device information, etc.".
     ///
     /// - Parameters:
-    ///   - receiptData: A signed receipt that records all information about a successful payment transaction.
+    ///   - base64Receipt: A signed receipt that records all information about a successful payment transaction.
     ///   - secretKey: Your app’s shared secret (a hexadecimal string). Only used for receipts that contain auto-renewable subscriptions.
-    public func verifyReceipt(_ receiptData: Data?, sharedSecret secretKey: String? = nil) {
-        guard let data = receiptData else {
-            let messae = "The received data is null."
-            let error  = NSError(domain: "SKErrorDomain.verifyReceipt",
+    public func verifyReceipt(_ base64Receipt: String?, sharedSecret secretKey: String? = nil) {
+        guard let receipt = base64Receipt else {
+            let messae = "The base64 receipt is null."
+            let error  = NSError(domain: "RVErrorDomain.receipt.verifying",
                                  code: -12,
                                  userInfo: [NSLocalizedDescriptionKey : messae])
             
@@ -103,11 +101,9 @@ open class DYFStoreReceiptVerifier {
             return
         }
         
-        let receiptBase64 = data.base64EncodedString()
-        
         // Creates the JSON object that describes the request.
         var requestContents: [String: Any] = [String: Any]()
-        requestContents["receipt-data"] = receiptBase64
+        requestContents["receipt-data"] = receipt
         if let key = secretKey {
             requestContents["password"] = key
         }
@@ -129,9 +125,8 @@ open class DYFStoreReceiptVerifier {
         request.httpMethod = "POST"
         request.httpBody = self.requestData
         
-        if self.canInvalidateSession {
-            self.instantiateUrlSession()
-            self.canInvalidateSession = false
+        if self.isSessionInvalid {
+            self.setup()
         }
         
         self.dataTask = self.urlSession?.dataTask(with: request) { [weak self] (data, response, error) in
@@ -165,7 +160,7 @@ open class DYFStoreReceiptVerifier {
                 self.connect(withUrl: sandboxUrl)
             } else {
                 let (code, message) = matchMessage(withStatus: status)
-                let nsError = NSError(domain: "SKErrorDomain.verifyReceipt",
+                let nsError = NSError(domain: "RVErrorDomain.receipt.verifying",
                                       code: code,
                                       userInfo: [NSLocalizedDescriptionKey : message])
                 
