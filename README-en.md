@@ -158,7 +158,7 @@ public func matchMessage(withStatus status: Int) -> String {
 
 ## Demo
 
-To learn more, please check out [Demo](https://github.com/itenfay/DYFStore/blob/master/DYFStoreDemo/DYFStoreManager.swift).
+To learn more, please check out [Demo](https://github.com/itenfay/DYFStore/blob/master/DYFStoreDemo/Sample/SKIAPManager.swift).
 
 
 ## Feedback is welcome
